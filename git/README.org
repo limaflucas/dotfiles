@@ -1,0 +1,13 @@
+#+TITLE: My git configs
+#+AUTHOR: Lucas Lima
+#+STARTUP: showeverything
+#+OPTIONS: toc:2
+
+* TABLE OF CONTENTS :toc:
+- [[#installation][Installation]]
+
+* Installation
+The installation is simple as creating a sym link of the gitconfig on user's home. Run the command as follows in any shell
+#+begin_quote
+ln -s ./gitconfig ~/.gitconfig
+#+end_quote
