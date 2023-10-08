@@ -31,6 +31,9 @@
   - [[#projectile][Projectile]]
 - [[#terminals][Terminals]]
   - [[#vterm][Vterm]]
+- [[#solving-some-problems][Solving some problems]]
+  - [[#fix-all-the-icons][Fix All the icons]]
+  - [[#fix-icons-on-dashboard-and-modeline][Fix icons on dashboard and modeline]]
 
 * External scripts
 #+begin_src emacs-lisp
@@ -221,3 +224,14 @@
   (use-package vterm-toggle
     :after vterm)
 #+end_src
+* Solving some problems
+** Fix All the icons
+After installing all the icons package, often is necessary to enforce the fonts installation. Run the command bellow fix the issue
+#+begin_quote
+M-x all-the-icons-install-fonts
+#+end_quote
+** Fix icons on dashboard and modeline
+These two packages require nerd-icons to work correctly. Just run the command bellow to fix the issue
+#+begin_quote
+M-x nerd-icons-install-fonts
+#+end_quote
