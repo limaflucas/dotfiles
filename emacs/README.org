@@ -1,0 +1,223 @@
+#+TITLE: LFLIMA Emacs configs
+#+AUTHOR: Lucas Lima
+#+DESCRIPTION: Emacs to my taste
+#+STARTUP: showeverything
+#+OPTIONS: toc:2
+
+* TABLE OF CONTENTS :toc:
+- [[#external-scripts][External scripts]]
+  - [[#elpaca][Elpaca]]
+  - [[#completions][Completions]]
+- [[#dashboard][Dashboard]]
+- [[#fonts-and-icons][Fonts and icons]]
+  - [[#all-the-icons][All the icons]]
+  - [[#faces][Faces]]
+  - [[#line-spacing][Line spacing]]
+- [[#keys][Keys]]
+  - [[#which-key][Which-key]]
+- [[#git][Git]]
+  - [[#magit][Magit]]
+- [[#gui][GUI]]
+  - [[#bars][Bars]]
+  - [[#indent][Indent]]
+  - [[#file-changes][File changes]]
+  - [[#line-numbers][Line numbers]]
+  - [[#modeline][Modeline]]
+  - [[#themes][Themes]]
+  - [[#typing][Typing]]
+- [[#modes][Modes]]
+  - [[#org][Org]]
+- [[#projects][Projects]]
+  - [[#projectile][Projectile]]
+- [[#terminals][Terminals]]
+  - [[#vterm][Vterm]]
+
+* External scripts
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "~/.emacs.d/scripts/")
+#+end_src
+** Elpaca
+#+begin_src emacs-lisp
+  (require 'elpaca-config)
+#+end_src
+** Completions
+#+begin_src emacs-lisp
+  (require 'completion-config)
+#+end_src
+
+* Dashboard
+#+begin_src emacs-lisp
+  (use-package dashboard
+  :ensure t 
+  :init
+  (setq initial-buffer-choice 'dashboard-open)
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-banner-logo-title "Emacs Is More Than A Text Editor!")
+  (setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
+  (setq dashboard-center-content nil) ;; set to 't' for centered content
+  (setq dashboard-items '((recents . 5)
+			  (agenda . 5 )
+			  (bookmarks . 3)
+			  (projects . 3)
+			  (registers . 3)))
+  :custom 
+  (dashboard-modify-heading-icons '((recents . "file-text")
+				      (bookmarks . "book")))
+  :config
+  (dashboard-setup-startup-hook))
+#+end_src
+
+* Fonts and icons
+** All the icons
+#+begin_src emacs-lisp
+  (use-package all-the-icons
+    :ensure t
+    :if (display-graphic-p))
+
+  (use-package all-the-icons-dired
+    :hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
+#+end_src
+** Faces
+#+begin_src emacs-lisp
+  (set-face-attribute 'font-lock-comment-face nil
+		      :slant 'italic)
+  (set-face-attribute 'font-lock-keyword-face nil
+		      :slant 'italic)
+#+end_src
+** Line spacing
+#+begin_src emacs-lisp
+  (setq-default line-spacing 0.25)
+#+end_src
+
+* Keys
+** Which-key
+#+begin_src emacs-lisp
+  (use-package which-key
+    :init
+      (which-key-mode 1)
+    :diminish
+    :config
+    (setq which-key-side-window-location 'bottom
+            which-key-sort-order #'which-key-key-order-alpha
+            which-key-allow-imprecise-window-fit nil
+            which-key-sort-uppercase-first nil
+            which-key-add-column-padding 1
+            which-key-max-display-columns nil
+            which-key-min-display-lines 6
+            which-key-side-window-slot -10
+            which-key-side-window-max-height 0.25
+            which-key-idle-delay 0.8
+            which-key-max-description-length 25
+            which-key-allow-imprecise-window-fit nil
+            which-key-separator " → " ))
+#+end_src
+
+* Git
+** Magit
+#+begin_src emacs-lisp
+  (use-package magit)
+#+end_src
+
+* GUI
+** Bars
+#+begin_src emacs-lisp
+(menu-bar-mode -1)
+(setq scroll-bar-mode -1)
+(tool-bar-mode -1)
+#+end_src
+** Indent
+#+begin_src emacs-lisp
+  (electric-indent-mode -1)
+  (electric-pair-mode 1)
+  ;; The following prevents <> from auto-pairing when electric-pair-mode is on.
+  ;; Otherwise, org-tempo is broken when you try to <s TAB...
+  (add-hook 'org-mode-hook (lambda ()
+                             (setq-local electric-pair-inhibit-predicate
+                                         `(lambda (c)
+                                            (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
+#+end_src
+** File changes
+#+begin_src emacs-lisp
+  (global-auto-revert-mode t)
+#+end_src
+** Line numbers
+#+begin_src emacs-lisp
+  (global-display-line-numbers-mode 1)
+#+end_src
+** Modeline
+#+begin_src emacs-lisp
+  (use-package doom-modeline
+    :ensure t
+    :init (doom-modeline-mode 1)
+    :config
+    (setq doom-modeline-height 35      ;; sets modeline height
+	  doom-modeline-bar-width 5    ;; sets right bar width
+	  doom-modeline-persp-name t   ;; adds perspective name to modeline
+	  doom-modeline-persp-icon t)) ;; adds folder icon next to persp name
+#+end_src
+** Themes
+*** Doom
+#+begin_src emacs-lisp
+  (use-package doom-themes
+    :ensure t
+    :config
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+          doom-themes-enable-italic t) ; if nil, italics is universally disabled
+    (load-theme 'doom-one t)
+
+    ;; Enable flashing mode-line on errors
+    (doom-themes-visual-bell-config)
+    ;; Enable custom neotree theme (all-the-icons must be installed!)
+    (doom-themes-neotree-config)
+    ;; or for treemacs users
+    (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+    (doom-themes-treemacs-config)
+    ;; Corrects (and improves) org-mode's native fontification.
+    (doom-themes-org-config))
+#+end_src
+** Typing
+#+begin_src emacs-lisp
+  (delete-selection-mode 1)
+#+end_src
+
+* Modes
+** Org
+*** Enable TOC
+#+begin_src emacs-lisp
+  (use-package toc-org
+    :commands toc-org-enable
+    :init (add-hook 'org-mode-hook 'toc-org-enable))
+#+end_src
+*** Bullets
+#+begin_src emacs-lisp
+  (add-hook 'org-mode-hook 'org-indent-mode)
+  (use-package org-bullets)
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+end_src
+*** Tempo
+#+begin_src emacs-lisp
+  (require 'org-tempo)
+#+end_src
+
+* Projects
+** Projectile
+#+begin_src emacs-lisp
+  (use-package projectile
+    :config
+    (projectile-mode 1))
+#+end_src
+* Terminals
+** Vterm
+#+begin_src emacs-lisp
+  (use-package vterm
+    :config
+    (setq shell-file-name "/bin/zsh"
+          vterm-max-scrollback 5000))
+#+end_src
+*** Toggle
+#+begin_src emacs-lisp
+  (use-package vterm-toggle
+    :after vterm)
+#+end_src
