@@ -4,10 +4,14 @@
 #+OPTIONS: toc:2
 
 * TABLE OF CONTENTS :toc:
+- [[#company][Company]]
+  - [[#counsel][Counsel]]
+  - [[#ivy][Ivy]]
+- [[#export-file][Export file]]
 
 * Company
 #+begin_src emacs-lisp
-    (use-package company
+  (use-package company
     :defer 2
     :diminish
     :custom
@@ -29,8 +33,8 @@
     :after ivy
     :diminish
     :config 
-      (counsel-mode)
-      (setq ivy-initial-inputs-alist nil)) ;; removes starting ^ regex in M-x  
+    (counsel-mode)
+    (setq ivy-initial-inputs-alist nil)) ;; removes starting ^ regex in M-x  
 #+end_src
 ** Ivy
 #+begin_src emacs-lisp
@@ -57,11 +61,11 @@
     :init (ivy-rich-mode 1) ;; this gets us descriptions in M-x.
     :custom
     (ivy-virtual-abbreviate 'full
-			    ivy-rich-switch-buffer-align-virtual-buffer t
-			    ivy-rich-path-style 'abbrev)
+                            ivy-rich-switch-buffer-align-virtual-buffer t
+                            ivy-rich-path-style 'abbrev)
     :config
     (ivy-set-display-transformer 'ivy-switch-buffer
-				 'ivy-rich-switch-buffer-transformer))  
+                                 'ivy-rich-switch-buffer-transformer))  
 #+end_src
 
 * Export file
