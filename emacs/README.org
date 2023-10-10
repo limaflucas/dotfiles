@@ -5,6 +5,7 @@
 #+OPTIONS: toc:2
 
 * TABLE OF CONTENTS :toc:
+- [[#install][Install]]
 - [[#external-scripts][External scripts]]
   - [[#elpaca][Elpaca]]
   - [[#completions][Completions]]
@@ -34,6 +35,34 @@
 - [[#solving-some-problems][Solving some problems]]
   - [[#fix-all-the-icons][Fix All the icons]]
   - [[#fix-icons-on-dashboard-and-modeline][Fix icons on dashboard and modeline]]
+
+* Install
+The installation process is simple as running the script called install.sh. The script optionaly requires one argument which is Emacs's configuration path. If no value is provided, the scrip will assume ~/.emacs.d
+#+begin_src sh :results output :shebang #!/bin/zsh :cmdline EPATH :tangle install.sh
+  #!/bin/zsh
+  if [ -z "$1" ]; then
+      EPATH="$HOME/.emacs.d"
+  else
+      EPATH="$1"
+  fi
+
+  echo "Using $EPATH as Emacs config path"
+
+  if [ -d "$EPATH" ]; then
+      echo "Backing up current Emacs files"
+      mv "$EPATH" "$EPATH.bkp"
+      rm -rf "$EPATH"
+  fi
+
+  echo "Creating directory structures"
+  mkdir -p "$EPATH/scripts"
+
+  echo "Installing scripts"
+  cp "README.org" "early-init.el" "init.el" "$EPATH/."
+  cp "./scripts/completion-config.el" "./scripts/elpaca-config.el" "$EPATH/scripts/."
+
+  echo "Installation completed"
+#+end_src 
 
 * External scripts
 #+begin_src emacs-lisp
@@ -203,7 +232,12 @@
 #+begin_src emacs-lisp
   (require 'org-tempo)
 #+end_src
-
+*** Languages
+#+begin_src emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((shell . t)))
+#+end_src
 * Projects
 ** Projectile
 #+begin_src emacs-lisp
