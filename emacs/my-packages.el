@@ -2,6 +2,6 @@
 
 (package! org-bullets)
 
-;;(package! 'org-tempo)
+(package! org-tempo)
 
 (provide 'my-packages)

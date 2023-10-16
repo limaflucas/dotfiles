@@ -26,7 +26,7 @@
 #+end_src
 **** Tempo
 #+begin_src emacs-lisp :tangle my-packages.el
-;;(package! 'org-tempo)
+(package! org-tempo)
 #+end_src
 
 ** Exporting

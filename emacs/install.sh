@@ -25,6 +25,5 @@ echo "(require 'my-packages)" >> $DOOM_DIR/packages.el
 
 echo "Copying custom files to $DOOM_DIR"
 cp my-packages.el my-configs.el $DOOM_DIR/.
-
 echo "All set! Your free to go."
 return 0;
