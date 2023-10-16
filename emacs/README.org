@@ -1,271 +1,120 @@
-#+TITLE: LFLIMA Emacs configs
-#+AUTHOR: Lucas Lima
-#+DESCRIPTION: Emacs to my taste
-#+STARTUP: showeverything
-#+OPTIONS: toc:2
+#+title: Emacs configurations to my taste
+#+author: Lucas Lima (limaflucas)
+#+STARTUP: show2levels
+#+OPTIONS: toc:3
 
-* TABLE OF CONTENTS :toc:
-- [[#install][Install]]
-- [[#external-scripts][External scripts]]
-  - [[#elpaca][Elpaca]]
-  - [[#completions][Completions]]
-- [[#dashboard][Dashboard]]
-- [[#fonts-and-icons][Fonts and icons]]
-  - [[#all-the-icons][All the icons]]
-  - [[#faces][Faces]]
-  - [[#line-spacing][Line spacing]]
-- [[#keys][Keys]]
-  - [[#which-key][Which-key]]
-- [[#git][Git]]
-  - [[#magit][Magit]]
-- [[#gui][GUI]]
-  - [[#bars][Bars]]
-  - [[#indent][Indent]]
-  - [[#file-changes][File changes]]
-  - [[#line-numbers][Line numbers]]
-  - [[#modeline][Modeline]]
-  - [[#themes][Themes]]
-  - [[#typing][Typing]]
-- [[#modes][Modes]]
+* Table of contents :toc:
+- [[#packages][Packages]]
+  - [[#lang][Lang]]
+  - [[#exporting][Exporting]]
+- [[#configurations][Configurations]]
   - [[#org][Org]]
-- [[#projects][Projects]]
-  - [[#projectile][Projectile]]
-- [[#terminals][Terminals]]
-  - [[#vterm][Vterm]]
-- [[#solving-some-problems][Solving some problems]]
-  - [[#fix-all-the-icons][Fix All the icons]]
-  - [[#fix-icons-on-dashboard-and-modeline][Fix icons on dashboard and modeline]]
+  - [[#gui--behaviour][GUI & behaviour]]
+  - [[#exporting-1][Exporting]]
+- [[#installation][Installation]]
 
-* Install
-The installation process is simple as running the script called install.sh. The script optionaly requires one argument which is Emacs's configuration path. If no value is provided, the scrip will assume ~/.emacs.d
-#+begin_src sh :results output :shebang #!/bin/zsh :cmdline EPATH :tangle install.sh
-  #!/bin/zsh
-  if [ -z "$1" ]; then
-      EPATH="$HOME/.emacs.d"
-  else
-      EPATH="$1"
-  fi
-
-  echo "Using $EPATH as Emacs config path"
-
-  if [ -d "$EPATH" ]; then
-      echo "Backing up current Emacs files"
-      mv "$EPATH" "$EPATH.bkp"
-      rm -rf "$EPATH"
-  fi
-
-  echo "Creating directory structures"
-  mkdir -p "$EPATH/scripts"
-
-  echo "Installing scripts"
-  cp "README.org" "early-init.el" "init.el" "$EPATH/."
-  cp "./scripts/completion-config.el" "./scripts/elpaca-config.el" "$EPATH/scripts/."
-
-  echo "Installation completed"
-#+end_src 
-
-* External scripts
-#+begin_src emacs-lisp
-  (add-to-list 'load-path "~/.emacs.d/scripts/")
+* Packages
+** Lang
+*** Org
+**** Toc
+#+begin_src emacs-lisp :tangle my-packages.el
+(package! toc-org)
 #+end_src
-** Elpaca
-#+begin_src emacs-lisp
-  (require 'elpaca-config)
+**** Bullets
+#+begin_src emacs-lisp :tangle my-packages.el
+(package! org-bullets)
 #+end_src
-** Completions
-#+begin_src emacs-lisp
-  (require 'completion-config)
+**** Tempo
+#+begin_src emacs-lisp :tangle my-packages.el
+;;(package! 'org-tempo)
 #+end_src
 
-* Dashboard
-#+begin_src emacs-lisp
-  (use-package dashboard
-  :ensure t 
-  :init
-  (setq initial-buffer-choice 'dashboard-open)
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
-  (setq dashboard-banner-logo-title "Emacs Is More Than A Text Editor!")
-  (setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
-  (setq dashboard-center-content nil) ;; set to 't' for centered content
-  (setq dashboard-items '((recents . 5)
-			  (agenda . 5 )
-			  (bookmarks . 3)
-			  (projects . 3)
-			  (registers . 3)))
-  :custom 
-  (dashboard-modify-heading-icons '((recents . "file-text")
-				      (bookmarks . "book")))
-  :config
-  (dashboard-setup-startup-hook))
+** Exporting
+#+begin_src emacs-lisp :tangle my-packages.el
+(provide 'my-packages)
 #+end_src
 
-* Fonts and icons
-** All the icons
-#+begin_src emacs-lisp
-  (use-package all-the-icons
-    :ensure t
-    :if (display-graphic-p))
-
-  (use-package all-the-icons-dired
-    :hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
-#+end_src
-** Faces
-#+begin_src emacs-lisp
-  (set-face-attribute 'font-lock-comment-face nil
-		      :slant 'italic)
-  (set-face-attribute 'font-lock-keyword-face nil
-		      :slant 'italic)
-#+end_src
-** Line spacing
-#+begin_src emacs-lisp
-  (setq-default line-spacing 0.25)
-#+end_src
-
-* Keys
-** Which-key
-#+begin_src emacs-lisp
-  (use-package which-key
-    :init
-      (which-key-mode 1)
-    :diminish
-    :config
-    (setq which-key-side-window-location 'bottom
-            which-key-sort-order #'which-key-key-order-alpha
-            which-key-allow-imprecise-window-fit nil
-            which-key-sort-uppercase-first nil
-            which-key-add-column-padding 1
-            which-key-max-display-columns nil
-            which-key-min-display-lines 6
-            which-key-side-window-slot -10
-            which-key-side-window-max-height 0.25
-            which-key-idle-delay 0.8
-            which-key-max-description-length 25
-            which-key-allow-imprecise-window-fit nil
-            which-key-separator " → " ))
-#+end_src
-
-* Git
-** Magit
-#+begin_src emacs-lisp
-  (use-package magit)
-#+end_src
-
-* GUI
-** Bars
-#+begin_src emacs-lisp
-(menu-bar-mode -1)
-(setq scroll-bar-mode -1)
-(tool-bar-mode -1)
-#+end_src
-** Indent
-#+begin_src emacs-lisp
-  (electric-indent-mode -1)
-  (electric-pair-mode 1)
-  ;; The following prevents <> from auto-pairing when electric-pair-mode is on.
-  ;; Otherwise, org-tempo is broken when you try to <s TAB...
-  (add-hook 'org-mode-hook (lambda ()
-                             (setq-local electric-pair-inhibit-predicate
-                                         `(lambda (c)
-                                            (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
-#+end_src
-** File changes
-#+begin_src emacs-lisp
-  (global-auto-revert-mode t)
-#+end_src
-** Line numbers
-#+begin_src emacs-lisp
-  (global-display-line-numbers-mode 1)
-#+end_src
-** Modeline
-#+begin_src emacs-lisp
-  (use-package doom-modeline
-    :ensure t
-    :init (doom-modeline-mode 1)
-    :config
-    (setq doom-modeline-height 35      ;; sets modeline height
-	  doom-modeline-bar-width 5    ;; sets right bar width
-	  doom-modeline-persp-name t   ;; adds perspective name to modeline
-	  doom-modeline-persp-icon t)) ;; adds folder icon next to persp name
-#+end_src
-** Themes
-*** Doom
-#+begin_src emacs-lisp
-  (use-package doom-themes
-    :ensure t
-    :config
-    ;; Global settings (defaults)
-    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-          doom-themes-enable-italic t) ; if nil, italics is universally disabled
-    (load-theme 'doom-tokyo-night t)
-
-    ;; Enable flashing mode-line on errors
-    (doom-themes-visual-bell-config)
-    ;; Enable custom neotree theme (all-the-icons must be installed!)
-    (doom-themes-neotree-config)
-    ;; or for treemacs users
-    (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
-    (doom-themes-treemacs-config)
-    ;; Corrects (and improves) org-mode's native fontification.
-    (doom-themes-org-config))
-#+end_src
-** Typing
-#+begin_src emacs-lisp
-  (delete-selection-mode 1)
-#+end_src
-
-* Modes
+* Configurations
 ** Org
-*** Enable TOC
-#+begin_src emacs-lisp
-  (use-package toc-org
-    :commands toc-org-enable
-    :init (add-hook 'org-mode-hook 'toc-org-enable))
+*** Toc
+#+begin_src emacs-lisp :tangle my-configs.el
+(use-package! toc-org
+  :commands toc-org-enable
+  :init (add-hook 'org-mode-hook 'toc-org-enable))
 #+end_src
 *** Bullets
-#+begin_src emacs-lisp
-  (add-hook 'org-mode-hook 'org-indent-mode)
-  (use-package org-bullets)
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+begin_src emacs-lisp :tangle my-configs.el
+(use-package! org-bullets)
+(add-hook 'org-mode-hook 'org-indent-mode)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 #+end_src
 *** Tempo
-#+begin_src emacs-lisp
-  (require 'org-tempo)
+#+begin_src emacs-lisp :tangle my-configs.el
+(use-package! org-tempo)
 #+end_src
 *** Languages
-#+begin_src emacs-lisp
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((shell . t)))
+#+begin_src emacs-lisp :tangle my-configs.el
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((shell . t)))
 #+end_src
-* Projects
-** Projectile
-#+begin_src emacs-lisp
-  (use-package projectile
-    :config
-    (projectile-mode 1))
+
+** GUI & behaviour
+*** Typing
+#+begin_src emacs-lisp :tangle my-configs.el
+(delete-selection-mode 1)
 #+end_src
-* Terminals
-** Vterm
-#+begin_src emacs-lisp
-  (use-package vterm
-    :config
-    (setq shell-file-name "/bin/zsh"
-          vterm-max-scrollback 5000))
+*** Indent
+#+begin_src emacs-lisp :tangle my-configs.el
+(electric-indent-mode -1)
+(electric-pair-mode 1)
+;; The following prevents <> from auto-pairing when electric-pair-mode is on.
+;; Otherwise, org-tempo is broken when you try to <s TAB...
+(add-hook 'org-mode-hook (lambda ()
+                           (setq-local electric-pair-inhibit-predicate
+                                       `(lambda (c)
+                                          (if (char-equal c ?<) t   (,electric-pair-inhibit-predicate   c))))))
 #+end_src
-*** Toggle
-#+begin_src emacs-lisp
-  (use-package vterm-toggle
-    :after vterm)
+*** File
+#+begin_src emacs-lisp :tangle my-configs.el
+(global-auto-revert-mode t)
 #+end_src
-* Solving some problems
-** Fix All the icons
-After installing all the icons package, often is necessary to enforce the fonts installation. Run the command bellow fix the issue
-#+begin_quote
-M-x all-the-icons-install-fonts
-#+end_quote
-** Fix icons on dashboard and modeline
-These two packages require nerd-icons to work correctly. Just run the command bellow to fix the issue
-#+begin_quote
-M-x nerd-icons-install-fonts
-#+end_quote
+
+** Exporting
+#+begin_src emacs-lisp :tangle my-configs.el
+(provide 'my-configs)
+#+end_src
+
+
+* Installation
+In order to install the packages and its configurations, run the script install.sh. The script will perform every needed action but won't restart the emacs or any daemons associated.
+#+begin_src shell :results output :shebang #!/bin/zsh :tangle install.sh
+# checks whether the packages and configurations files are present
+MY_PKGS="my-packages.el"
+MY_CFGS="my-configs.el"
+DOOM_DIR="$HOME/.config/doom"
+
+if [ ! -f "$MY_PKGS" ] || [ ! -f "$MY_CFGS" ]; then
+    echo "Before running, you must create your package and configuration files"
+    return -1;
+fi
+
+if [ ! -d "$DOOM_DIR" ]; then
+   echo "Apparently you don't have doom installed. First, complete your Doom installation and the run this script again"
+   return -1;
+fi
+
+echo "Appending commands to Doom's config.el"
+echo "\n(load \"~/.config/doom/my-configs\")" >> $DOOM_DIR/config.el
+echo "(require 'my-configs)" >> $DOOM_DIR/config.el
+
+
+echo "Appending commands to Doom's packages.el"
+echo "\n(load \"~/.config/doom/my-packages\")" >> $DOOM_DIR/packages.el
+echo "(require 'my-packages)" >> $DOOM_DIR/packages.el
+
+echo "Copying custom files to $DOOM_DIR"
+cp my-packages.el my-configs.el $DOOM_DIR/.
+echo "All set! Your free to go."
+return 0;
+#+end_src
