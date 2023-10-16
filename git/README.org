@@ -2,12 +2,40 @@
 #+AUTHOR: Lucas Lima
 #+STARTUP: showeverything
 #+OPTIONS: toc:2
+#+PROPERTY: header-args :tangle gitconfig
 
 * TABLE OF CONTENTS :toc:
+- [[#sections][Sections]]
+  - [[#core][Core]]
+  - [[#user][User]]
 - [[#installation][Installation]]
 
+* Sections
+** Core
+#+begin_src shell
+[core]
+    editor = "/usr/local/bin/emacsclient -r"
+#+end_src
+** User
+#+begin_src shell
+[user]
+    name = "Lucas Lima"
+    email = "lcs.freirelima@gmail.com"
+#+end_src
+
 * Installation
-The installation is simple as creating a sym link of the gitconfig on user's home. Run the command as follows in any shell
-#+begin_quote
-ln -s ./gitconfig ~/.gitconfig
-#+end_quote
+To install all configurations above, run the install.sh script. Don't forget to backup your current file.
+#+begin_src shell :tangle install.sh :shebang #!/bin/zsh
+GIT_FILE="gitconfig"
+
+if [ ! -f "$GIT_FILE" ]; then
+    echo "Before running, ensure you have generated the $GIT_FILE file"
+    return -1;
+fi
+
+echo "Copying $GIT_FILE"
+cp $GIT_FILE $HOME/.$GIT_FILE
+
+echo "All set! You are free to go."
+return 0;
+#+end_src

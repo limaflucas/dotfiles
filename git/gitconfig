@@ -1,5 +1,6 @@
 [core]
-    editor = "/opt/homebrew/bin/emacs"
+    editor = "/usr/local/bin/emacsclient -r"
+
 [user]
     name = "Lucas Lima"
     email = "lcs.freirelima@gmail.com"
